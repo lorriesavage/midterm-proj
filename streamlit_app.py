@@ -33,8 +33,8 @@ if app_page == 'Landing page/describing data':
     st.dataframe(df.head())
     st.write("The World Happiness Report reports data from 2023. A preview of the dataset is shown below: ")
     
-    df2 = df.drop(["Explained by: Log GDP per capita", "Explained by: Social support", "Explained by: Healthy life expectancy", "Explained by: Freedom to make life choices", "Explained by: Generosity", "Explained by: Perception of corruption", "Dystopia + residual"])
-    st.dataframe(df2.head())
+    #df2 = df.drop(["Explained by: Log GDP per capita", "Explained by: Social support", "Explained by: Healthy life expectancy", "Explained by: Freedom to make life choices", "Explained by: Generosity", "Explained by: Perception of corruption", "Dystopia + residual"])
+    #st.dataframe(df2.head())
 
     st.write("Source: https://www.kaggle.com/datasets/atom1991/world-happiness-report-2023 ")
 
@@ -61,7 +61,7 @@ if app_page == 'Visualization':
 
     # Create the heatmap
     fig, ax = plt.subplots(figsize=(10, 8))  # Adjust figure size as needed
-    sns.heatmap(heatmap_data, annot=True, fmt=".2f", ax=ax, cmap="RdBu_r", vmin=-1, vmax=1) 
+    sns.heatmap(heatmap_data, annot=True, fmt=".2f", ax=ax, cmap='RdBu_r', vmin=-1, vmax=1) 
     plt.xlabel("X-axis Label", fontsize=12)
     plt.ylabel("Y-axis Label", fontsize=12)
     plt.title("Correlation Matrix", fontsize=14)
@@ -77,7 +77,8 @@ list_columns = df.columns
 
 
 if app_page == 'Prediction':
-    st.subheader("Prediction")     
+    st.title("03. Prediction")
+        
     list_columns = df.columns
 
     input_lr = st.multiselect("Select two variables: ", list_columns, ["Happiness score", "Logged GDP per capita"])
@@ -101,15 +102,30 @@ if app_page == 'Prediction':
 
     pred = lr.predict(X_test)
 
-    lr.fit(X_train, y_train)
+    explained_variance = np.round(mt.explained_variance_score(y_test, pred) * 100, 2)
+    mae = np.round(mt.mean_absolute_error(y_test, pred), 2)
+    mse = np.round(mt.mean_squared_error(y_test, pred), 2)
+    r_square = np.round(mt.r2_score(y_test, pred), 2)
 
+    # Display results
     st.subheader('🎯 Results')
+    st.write("1) The model explains,", explained_variance, "% variance of the target feature")
+    st.write("2) The Mean Absolute Error of the model is:", mae)
+    st.write("3) MSE: ", mse)
+    st.write("4) The R-Square score of the model is", r_square)
 
+    # Plotting the Linear Regression line
+    st.subheader('📈 Linear Regression Line')
 
-    st.write("1) The model explains,", np.round(mt.explained_variance_score(y_test, pred)*100,2),"% variance of the target feature")
-    st.write("2) The Mean Absolute Error of model is:", np.round(mt.mean_absolute_error(y_test, pred ),2))
-    st.write("3) MSE: ", np.round(mt.mean_squared_error(y_test, pred),2))
-    st.write("4) The R-Square score of the model is " , np.round(mt.r2_score(y_test, pred),2))
+    # Create a scatter plot with regression line
+    plt.figure(figsize=(10, 6))
+    sns.regplot(x=df_new[input_lr[0]], y=y, data=df_new, scatter_kws={'alpha':0.5}, line_kws={"color": "red"})
+    plt.title(f'Linear Regression of Healthy Life Expectancy vs {input_lr[0]}')
+    plt.xlabel(input_lr[0])
+    plt.ylabel('Healthy Life Expectancy')
+    
+    st.pyplot(plt)  # Display the plot in Streamlit
+
 
 
 
