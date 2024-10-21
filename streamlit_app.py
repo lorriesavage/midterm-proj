@@ -69,7 +69,7 @@ if app_page == 'Visualization':
 
     string_columns = list(df.select_dtypes(include=['object']).columns)
     data1 = df.drop(columns=string_columns)
-    data = data1.drop(columns=[ 'Ladder score in Dystopia', 'upperwhisker', 'lowerwhisker', 'Explained by: Log GDP per capita', 'Explained by: Social support', 'Explained by: Healthy life expectancy', 'Explained by: Freedom to make life choices', 'Explained by: Generosity', 'Explained by: Perceptions of corruption', 'Dystopia + residual' ])
+    data = data1.drop(columns=[ 'Standard error of ladder score', 'Ladder score in Dystopia', 'upperwhisker', 'lowerwhisker', 'Explained by: Log GDP per capita', 'Explained by: Social support', 'Explained by: Healthy life expectancy', 'Explained by: Freedom to make life choices', 'Explained by: Generosity', 'Explained by: Perceptions of corruption', 'Dystopia + residual' ])
     #.drop(columns=...)
 
     # Create heatmap data (assuming 'value_column' is the column you want to visualize)
@@ -150,10 +150,12 @@ if app_page == 'Prediction':
     
     # Display results
     st.subheader('🎯 Results')
-    st.write("1) The model explains,", explained_variance, "% variance of the target feature")
-    st.write("2) The Mean Absolute Error of the model is:", mae)
-    st.write("3) MSE: ", mse)
-    st.write("4) The R-Square score of the model is", r_square)
+    st.write("1) The model explains,", explained_variance, "% variance in healthy life expectancy.")
+    st.write("2) The Mean Absolute Error of the model is:", mae, "indicating the average error in predictions.")
+    st.write("3) MSE: ", mse, "reflecting the average squared differences from the actual values.")
+    st.write("4) The R-Square score of the model is", r_square, "suggesting that the model captures a moderate portion of the variability in life expectancy.")
+
+
 
     # Feature Importance Analysis
     st.subheader("📊 Feature Importance")
